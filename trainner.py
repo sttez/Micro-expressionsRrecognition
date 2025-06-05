@@ -538,12 +538,14 @@ def main():
     num_classes = len(valid_classes)
 
     batch_size = 8
-    num_epochs = 1
+    num_epochs = 10
     learning_rate = 0.0001
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     logger.info("加载数据集...")
+
+    from torch.utils.data import DataLoader, random_split
 
     train_txt = os.path.join(project_root, 'cls_train.txt')
     test_txt = os.path.join(project_root, 'cls_test.txt')
@@ -551,22 +553,29 @@ def main():
     logger.info(f"训练文件路径: {train_txt}")
     logger.info(f"测试文件路径: {test_txt}")
 
-    train_dataset = CASME2Dataset(train_txt)
-    if len(train_dataset) == 0:
+    # 载入整个训练集
+    full_train_dataset = CASME2Dataset(train_txt)
+    if len(full_train_dataset) == 0:
         logger.error("训练集为空，终止训练。")
         return
 
+    # 按比例切分训练/验证集（比如80%训练, 20%验证）
+    val_ratio = 0.2
+    val_size = int(len(full_train_dataset) * val_ratio)
+    train_size = len(full_train_dataset) - val_size
+    generator = torch.Generator().manual_seed(42)
+
+    train_dataset, val_dataset = random_split(full_train_dataset, [train_size, val_size])
+
+    # 测试集
     test_dataset = CASME2Dataset(test_txt)
-    val_size = int(len(test_dataset) * 0.5)
-    test_size = len(test_dataset) - val_size
-    val_dataset, test_dataset = torch.utils.data.random_split(test_dataset, [val_size, test_size])
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
 
     logger.info(f"训练集: {len(train_dataset)} 样本")
-    #logger.info(f"验证集: {len(val_dataset)} 样本")
+    logger.info(f"验证集: {len(val_dataset)} 样本")
     logger.info(f"测试集: {len(test_dataset)} 样本")
     logger.info(f"类别: {valid_classes}\n")
 
