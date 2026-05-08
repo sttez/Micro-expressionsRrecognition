@@ -1,0 +1,69 @@
+# ====== 数据文件（隐私保护）======
+# CASME2 原始数据（受版权保护，不上传）
+data/CASME2-RAW/
+
+# 预处理生成的数据
+data/sequences/
+data/optical_flow/
+data/landmarks/
+
+# CASME2 标注 Excel（可能包含受保护信息）
+data/CASME2-coding-*.xlsx
+data/CASME2-ObjectiveClasses.xlsx
+data/*.xml
+
+# 标签文件（包含数据路径和分布信息）
+cls_train.txt
+cls_test.txt
+class_mapping.txt
+
+# 生成的数据可视化图
+data/*.png
+sequence_distribution.png
+
+# ====== 模型权重（文件过大）======
+models/weights/
+models/*.pth
+models/*.h5
+
+# ====== 大文件（超过 GitHub 限制）======
+utils/shape_predictor_68_face_landmarks.dat
+
+# ====== 日志文件 ======
+processing.log
+*.log
+
+# ====== Python 缓存 ======
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+
+# ====== IDE 配置 ======
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ====== 操作系统文件 ======
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# ====== 临时文件 ======
+*.tmp
+*.bak
+*.temp
+webapp/temp/
+webapp/temp_log.txt
+
+# ====== 保留目录结构的占位 ======
+# data/CASME2-RAW/ 目录下放置 CASME2 原始数据
+# models/weights/ 目录下保存训练好的模型权重
+# 首次 clone 后需自行准备数据并运行 python data/prepare_dataset.py
